@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Cinema</title>
+    <!-- ======= Styles ====== -->
+    <link rel="stylesheet" th:href="@{/assets/css/style.css}">
+</head>
+
+<body>
+<!-- =============== Navigation ================ -->
+<div class="container">
+    <div class="navigation">
+        <ul>
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="folder-open-outline"></ion-icon>
+                        </span>
+                    <span class="title">Menu Quản Lý</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" onclick="showContent('dashboard')">
+                        <span class="icon">
+                            <ion-icon name="home-outline"></ion-icon>
+                        </span>
+                    <span class="title">Dashboard</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="people-outline"></ion-icon>
+                        </span>
+                    <span class="title">Customers</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" onclick="showContent('quanLyVe')">
+                        <span class="icon">
+                            <ion-icon name="film-outline"></ion-icon>
+                        </span>
+                    <span class="title">Movies</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="ticket-outline"></ion-icon>
+                        </span>
+                    <span class="title">Ticket</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#" onclick="showContent('quanlyrapphim')">
+                        <span class="icon">
+                            <ion-icon name="business-outline"></ion-icon>
+                        </span>
+                    <span class="title">Cinema</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="bed-outline"></ion-icon>
+                        </span>
+                    <span class="title">Room</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="time-outline"></ion-icon>
+                        </span>
+                    <span class="title">Suất chiếu</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="gift-outline"></ion-icon>
+                        </span>
+                    <span class="title">Quà Tặng</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#">
+                        <span class="icon">
+                            <ion-icon name="bar-chart-outline"></ion-icon>
+                        </span>
+                    <span class="title">Doanh Thu</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/logout">
+                        <span class="icon">
+                            <ion-icon name="log-out-outline"></ion-icon>
+                        </span>
+                    <span class="title">Sign Out</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- ========================= Main ==================== -->
+    <div id="dashboard" class="content active">
+        <div class="main">
+            <div class="topbar">
+                <div class="toggle">
+                    <ion-icon name="menu-outline"></ion-icon>
+                </div>
+            </div>
+        </div>
+
+    <div>
+        <h1>Quản lý </h1>
+        <div class="mb-3">
+            <div class="search">
+                <label>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tên phim">
+                    <ion-icon name="search-outline"></ion-icon>
+                    <button type="button" oninput="searchMovies()">Tìm kiếm</button>
+                </label>
+            </div>
+
+            <!-- Nút Lọc với Menu Con -->
+            <div class="filter-box-container">
+                <div class="filter-box">
+                    <button class="btn btn-secondary">Lọc Phim</button>
+                    <div class="filter-options">
+                        <button class="dropdown-item" onclick="filterMovies('new')">Lọc Phim Mới</button>
+                        <button class="dropdown-item" onclick="filterMovies('mostViewed')">Lọc Phim Lượt Xem Nhiều
+                        </button>
+                        <button class="dropdown-item" onclick="filterMovies('leastViewed')">Lọc Phim Lượt Xem Ít
+                        </button>
+                        <button class="dropdown-item" onclick="filterMovies('all')">Quay lại</button>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-bordered my-4">
+                <thead>
+                <tr>
+                    <th>Mã Phim</th>
+                    <th>Tên Phim</th>
+                    <th>Đạo Diễn</th>
+                    <th>Diễn Viên</th>
+                    <th>Thể loại</th>
+                    <th>Hình ảnh</th>
+                    <th>Ngày Chiếu</th>
+                    <th>Thời Lượng</th>
+                    <th>Lượt Xem</th>
+                    <th>Thao Tác</th> <!-- Cột thêm, sửa, xóa -->
+                </tr>
+                </thead>
+                <tbody id="movieTable">
+                <!-- Dòng dữ liệu sẽ được thêm vào đây -->
+                </tbody>
+            </table>
+            </table>
+            <!-- Form Thêm/Sửa Phim -->
+            <form id="movieForm">
+                <div class="mb-3">
+                    <label for="movieId" class="form-label">Mã Phim</label>
+                    <input type="text" id="movieId" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="movieName" class="form-label">Tên Phim</label>
+                    <input type="text" id="movieName" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="director" class="form-label">Đạo Diễn</label>
+                    <input type="text" id="director" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="actors" class="form-label">Diễn Viên</label>
+                    <input type="text" id="actors" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Thời Lượng</label>
+                    <input type="text" id="duration" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label for="duration" class="form-label">Lượt Xem</label>
+                    <input type="text" id="viewer" class="form-control" disabled>
+                </div>
+                <input type="hidden" id="">
+                <button type="button" onclick="confirmAddOrUpdateMovie()" class="btn btn-primary">Thêm / Cập Nhật
+                </button>
+            </form>
+        </div>
+    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- =========== Scripts =========  -->
+<script th:src="@{/assets/js/main.js}"></script>
+<script>
+    function showContent(id) {
+        // Ẩn tất cả các phần tử nội dung
+        document.querySelectorAll('.content').forEach(div => div.classList.remove('active'));
+        // Hiển thị phần tử nội dung được chọn
+        document.getElementById(id).classList.add('active');
+    }
+
+    // Đảm bảo trang chủ là trang mặc định khi load
+    window.onload = function () {
+        showContent('dashboard');
+    };
+</script>
+<script th:src="@{/assets/js/test.js}"></script>
+
+
+<!-- ====== chart JS ======= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+<script th:src="@{/assets/js/chartsJS.js}"></script>
+<!-- ====== ionicons ======= -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+
+</html>
